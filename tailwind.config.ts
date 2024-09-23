@@ -11,6 +11,15 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        sunsetOrange: '#FF6F61',
+        cactusGreen: '#4CAF50',
+        skyBlue: '#2196F3',
+        desertSand: '#EDC9AF',
+        adobeBeige: '#D2B48C',
+      },
+      fontFamily: {
+        sans: ['Montserrat', 'sans-serif'],
+        body: ['Open Sans', 'sans-serif'],
       },
     },
   },
