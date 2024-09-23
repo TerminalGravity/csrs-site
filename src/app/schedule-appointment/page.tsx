@@ -44,7 +44,7 @@ export default function ScheduleAppointment() {
   };
 
   return (
-    <Layout title="Schedule Appointment | SolarRoof Pro" description="Schedule an appointment for our roofing and solar services.">
+    <Layout title="Schedule Appointment | Canyon State Solar & Roofing" description="Schedule an appointment for our roofing and solar services.">
       <div className="max-w-md mx-auto">
         <h1 className="text-3xl font-bold mb-6">Schedule an Appointment</h1>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

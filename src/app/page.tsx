@@ -7,7 +7,7 @@ export default function Home() {
     <Layout>
       <div className="flex flex-col md:flex-row items-center justify-between">
         <div className="md:w-1/2 mb-8 md:mb-0">
-          <h1 className="text-4xl font-bold mb-4">Welcome to SolarRoof Pro</h1>
+          <h1 className="text-4xl font-bold mb-4">Welcome to Canyon State Solar & Roofing</h1>
           <p className="text-xl mb-8">Your trusted partner for innovative roofing and solar solutions.</p>
           <div className="flex gap-4">
             <Link href="/info-request" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">

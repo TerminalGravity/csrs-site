@@ -49,7 +49,7 @@ export default function InfoRequest() {
   };
 
   return (
-    <Layout title="Request Information | SolarRoof Pro" description="Request information about our roofing and solar services.">
+    <Layout title="Request Information | Canyon State Solar & Roofing" description="Request information about our roofing and solar services.">
       <div className="max-w-md mx-auto">
         <h1 className="text-3xl font-bold mb-6">Request Information</h1>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
