@@ -1,114 +1,135 @@
 'use client';
 
 import { useState } from 'react';
+import Layout from '../components/Layout';
+import { useForm } from 'react-hook-form';
+
+type FormData = {
+  name: string;
+  email: string;
+  phone: string;
+  file: FileList;
+};
 
 export default function InfoRequest() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    file: null as File | null,
-  });
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'success' | 'error' | null>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, files } = e.target;
-    if (name === 'file' && files) {
-      setFormData({ ...formData, file: files[0] });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
-  };
+  const onSubmit = async (data: FormData) => {
+    setIsSubmitting(true);
+    setSubmitStatus(null);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const data = new FormData();
-    data.append('name', formData.name);
-    data.append('email', formData.email);
-    data.append('phone', formData.phone);
-    if (formData.file) {
-      data.append('file', formData.file);
+    const formData = new FormData();
+    formData.append('name', data.name);
+    formData.append('email', data.email);
+    formData.append('phone', data.phone);
+    if (data.file[0]) {
+      formData.append('file', data.file[0]);
     }
 
     try {
       const response = await fetch('/api/info-request', {
         method: 'POST',
-        body: data,
+        body: formData,
       });
 
       if (response.ok) {
-        alert('Your information has been submitted.');
+        setSubmitStatus('success');
+        reset();
       } else {
-        alert('There was an error submitting your information.');
+        setSubmitStatus('error');
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('There was an error submitting your information.');
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-md mx-auto mt-8 p-4 bg-white shadow-md rounded-lg">
-      <h1 className="text-2xl font-bold mb-4">Information Request Form</h1>
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
-          Name:
-        </label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          required
-          onChange={handleChange}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        />
+    <Layout title="Request Information | SolarRoof Pro" description="Request information about our roofing and solar services.">
+      <div className="max-w-md mx-auto">
+        <h1 className="text-3xl font-bold mb-6">Request Information</h1>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
+            <input
+              {...register('name', { required: 'Name is required' })}
+              type="text"
+              id="name"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            />
+            {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>}
+          </div>
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+            <input
+              {...register('email', { 
+                required: 'Email is required',
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: 'Invalid email address'
+                }
+              })}
+              type="email"
+              id="email"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            />
+            {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
+          </div>
+          <div>
+            <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone</label>
+            <input
+              {...register('phone', { 
+                required: 'Phone number is required',
+                pattern: {
+                  value: /^[0-9]{10}$/,
+                  message: 'Invalid phone number, please enter 10 digits'
+                }
+              })}
+              type="tel"
+              id="phone"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            />
+            {errors.phone && <p className="mt-1 text-sm text-red-600">{errors.phone.message}</p>}
+          </div>
+          <div>
+            <label htmlFor="file" className="block text-sm font-medium text-gray-700">Electrical Bill</label>
+            <input
+              {...register('file', { required: 'Electrical bill is required' })}
+              type="file"
+              id="file"
+              accept=".pdf,.jpg,.jpeg,.png"
+              className="mt-1 block w-full text-sm text-gray-500
+                file:mr-4 file:py-2 file:px-4
+                file:rounded-full file:border-0
+                file:text-sm file:font-semibold
+                file:bg-blue-50 file:text-blue-700
+                hover:file:bg-blue-100"
+            />
+            {errors.file && <p className="mt-1 text-sm text-red-600">{errors.file.message}</p>}
+          </div>
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            {isSubmitting ? 'Submitting...' : 'Submit'}
+          </button>
+        </form>
+        {submitStatus === 'success' && (
+          <div className="mt-4 p-4 bg-green-100 text-green-700 rounded-md">
+            Your information has been successfully submitted. We'll be in touch soon!
+          </div>
+        )}
+        {submitStatus === 'error' && (
+          <div className="mt-4 p-4 bg-red-100 text-red-700 rounded-md">
+            There was an error submitting your information. Please try again later.
+          </div>
+        )}
       </div>
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-          Email:
-        </label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          required
-          onChange={handleChange}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="phone">
-          Phone:
-        </label>
-        <input
-          type="tel"
-          id="phone"
-          name="phone"
-          required
-          onChange={handleChange}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="file">
-          Electrical Bill:
-        </label>
-        <input
-          type="file"
-          id="file"
-          name="file"
-          accept=".pdf,.jpg,.jpeg,.png"
-          required
-          onChange={handleChange}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        />
-      </div>
-      <button
-        type="submit"
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-      >
-        Submit
-      </button>
-    </form>
+    </Layout>
   );
 }

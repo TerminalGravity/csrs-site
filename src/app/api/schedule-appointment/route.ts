@@ -17,16 +17,24 @@ export async function POST(req: NextRequest) {
   };
 
   try {
-    await axios.post('https://api.gohighlevel.com/v1/your-endpoint', data, {
+    // Replace with your actual GoHighLevel endpoint
+    const goHighLevelEndpoint = process.env.GOHIGHLEVEL_APPOINTMENT_ENDPOINT;
+    const goHighLevelApiKey = process.env.GOHIGHLEVEL_API_KEY;
+
+    if (!goHighLevelEndpoint || !goHighLevelApiKey) {
+      throw new Error('GoHighLevel configuration is missing');
+    }
+
+    await axios.post(goHighLevelEndpoint, data, {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.GOHIGHLEVEL_API_KEY}`,
+        'Authorization': `Bearer ${goHighLevelApiKey}`,
       },
     });
 
-    return NextResponse.json({ message: 'Appointment data sent to GoHighLevel' });
+    return NextResponse.json({ message: 'Appointment scheduled successfully' });
   } catch (error) {
     console.error('GoHighLevel API error:', error);
-    return NextResponse.json({ error: 'Failed to send data to GoHighLevel' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to schedule appointment' }, { status: 500 });
   }
 }

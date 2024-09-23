@@ -37,17 +37,25 @@ export async function POST(req: NextRequest) {
       formData.append('file', new Blob([fileData]), file.originalFilename || 'file');
 
       try {
-        await axios.post('https://api.gohighlevel.com/v1/your-endpoint', formData, {
+        // Replace with your actual GoHighLevel endpoint
+        const goHighLevelEndpoint = process.env.GOHIGHLEVEL_ENDPOINT;
+        const goHighLevelApiKey = process.env.GOHIGHLEVEL_API_KEY;
+
+        if (!goHighLevelEndpoint || !goHighLevelApiKey) {
+          throw new Error('GoHighLevel configuration is missing');
+        }
+
+        await axios.post(goHighLevelEndpoint, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
-            'Authorization': `Bearer ${process.env.GOHIGHLEVEL_API_KEY}`,
+            'Authorization': `Bearer ${goHighLevelApiKey}`,
           },
         });
 
-        resolve(NextResponse.json({ message: 'Data sent to GoHighLevel' }));
+        resolve(NextResponse.json({ message: 'Information request submitted successfully' }));
       } catch (error) {
         console.error('GoHighLevel API error:', error);
-        resolve(NextResponse.json({ error: 'Failed to send data to GoHighLevel' }, { status: 500 }));
+        resolve(NextResponse.json({ error: 'Failed to process your request' }, { status: 500 }));
       }
     });
   });
