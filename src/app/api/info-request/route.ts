@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { sql } from '@vercel/postgres';
+import { createInfoRequestsTable } from '@/lib/db';
 import formidable from 'formidable';
-import axios from 'axios';
 import fs from 'fs';
 
 export const config = {
@@ -28,33 +29,23 @@ export async function POST(req: NextRequest) {
         return resolve(NextResponse.json({ error: 'Missing required fields' }, { status: 400 }));
       }
 
-      const fileData = fs.readFileSync(file.filepath);
-
-      const formData = new FormData();
-      formData.append('name', name);
-      formData.append('email', email);
-      formData.append('phone', phone);
-      formData.append('file', new Blob([fileData]), file.originalFilename || 'file');
-
       try {
-        // Replace with your actual GoHighLevel endpoint
-        const goHighLevelEndpoint = process.env.GOHIGHLEVEL_ENDPOINT;
-        const goHighLevelApiKey = process.env.GOHIGHLEVEL_API_KEY;
+        // Ensure the info_requests table exists
+        await createInfoRequestsTable();
 
-        if (!goHighLevelEndpoint || !goHighLevelApiKey) {
-          throw new Error('GoHighLevel configuration is missing');
-        }
+        // TODO: Implement file upload to a storage service (e.g., AWS S3)
+        // For now, we'll just store the file name
+        const fileUrl = file.originalFilename || 'file';
 
-        await axios.post(goHighLevelEndpoint, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            'Authorization': `Bearer ${goHighLevelApiKey}`,
-          },
-        });
+        // Insert the info request into the database
+        await sql`
+          INSERT INTO info_requests (name, email, phone, file_url)
+          VALUES (${name}, ${email}, ${phone}, ${fileUrl})
+        `;
 
         resolve(NextResponse.json({ message: 'Information request submitted successfully' }));
       } catch (error) {
-        console.error('GoHighLevel API error:', error);
+        console.error('Database error:', error);
         resolve(NextResponse.json({ error: 'Failed to process your request' }, { status: 500 }));
       }
     });
