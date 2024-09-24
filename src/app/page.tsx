@@ -48,7 +48,7 @@ export default function Home() {
           <div className="bg-desertSand p-8 rounded-lg shadow-lg hover:shadow-xl transition duration-300 border border-sunsetOrange flex flex-col items-center text-center">
             <FaChartLine className="text-5xl mb-4 text-sunsetOrange" />
             <h3 className="text-2xl font-semibold mb-4 text-sunsetOrange">Energy Efficiency Consulting</h3>
-            <p className="text-gray-800">Optimize your home's energy usage to beat the Arizona heat while saving money.</p>
+            <p className="text-gray-800">Optimize your home&apos;s energy usage to beat the Arizona heat while saving money.</p>
           </div>
         </div>
       </section>
