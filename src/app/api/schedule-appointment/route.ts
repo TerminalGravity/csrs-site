@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
     // Insert the appointment into the database
     await sql`
       INSERT INTO appointments (name, email, phone, appointment_date)
-      VALUES (${name}, ${email}, ${phone}, ${new Date(appointmentDate)})
+      VALUES (${name}, ${email}, ${phone}, ${new Date(appointmentDate).toISOString()})
     `;
 
     // Send data to GoHighLevel
