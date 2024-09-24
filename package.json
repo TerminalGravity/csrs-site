@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "bun run --hot src/app/page.tsx",
-    "build": "bun build ./src/app/page.tsx",
-    "start": "bun run build && bun run src/app/page.tsx"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
   },
   "dependencies": {
     "@types/pg": "^8.11.10",
