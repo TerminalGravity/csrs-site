@@ -3,12 +3,16 @@ import { sql } from '@vercel/postgres';
 import { createInfoRequestsTable } from '@/lib/db';
 import formidable from 'formidable';
 import fs from 'fs';
+import axios from 'axios';
 
 export const config = {
   api: {
     bodyParser: false,
   },
 };
+
+const GOHIGHLEVEL_API_KEY = process.env.GOHIGHLEVEL_API_KEY;
+const GOHIGHLEVEL_LOCATION_ID = process.env.GOHIGHLEVEL_LOCATION_ID;
 
 export async function POST(req: NextRequest) {
   const form = formidable({});
@@ -23,6 +27,7 @@ export async function POST(req: NextRequest) {
       const name = fields.name?.[0];
       const email = fields.email?.[0];
       const phone = fields.phone?.[0];
+      const message = fields.message?.[0];
       const file = files.file?.[0];
 
       if (!name || !email || !phone || !file) {
@@ -43,9 +48,35 @@ export async function POST(req: NextRequest) {
           VALUES (${name}, ${email}, ${phone}, ${fileUrl})
         `;
 
+        // Send data to GoHighLevel
+        const goHighLevelData = {
+          contact: {
+            firstName: name.split(' ')[0],
+            lastName: name.split(' ').slice(1).join(' '),
+            email: email,
+            phone: phone,
+            customField: {
+              message: message || '',
+              fileUrl: fileUrl
+            }
+          },
+          locationId: GOHIGHLEVEL_LOCATION_ID
+        };
+
+        const goHighLevelResponse = await axios.post('https://rest.gohighlevel.com/v1/contacts/', goHighLevelData, {
+          headers: {
+            'Authorization': `Bearer ${GOHIGHLEVEL_API_KEY}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (goHighLevelResponse.status !== 200) {
+          throw new Error('Failed to send data to GoHighLevel');
+        }
+
         resolve(NextResponse.json({ message: 'Information request submitted successfully' }));
       } catch (error) {
-        console.error('Database error:', error);
+        console.error('Error:', error);
         resolve(NextResponse.json({ error: 'Failed to process your request' }, { status: 500 }));
       }
     });

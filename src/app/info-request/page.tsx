@@ -9,6 +9,7 @@ type FormData = {
   email: string;
   phone: string;
   file: FileList;
+  message: string;
 };
 
 export default function InfoRequest() {
@@ -24,6 +25,7 @@ export default function InfoRequest() {
     formData.append('name', data.name);
     formData.append('email', data.email);
     formData.append('phone', data.phone);
+    formData.append('message', data.message);
     if (data.file[0]) {
       formData.append('file', data.file[0]);
     }
@@ -49,9 +51,9 @@ export default function InfoRequest() {
   };
 
   return (
-    <Layout title="Request Information | Canyon State Solar & Roofing" description="Request information about our roofing and solar services.">
+    <Layout title="Request Solar Estimate | Canyon State Solar & Roofing" description="Request a solar estimate by uploading your electrical bill.">
       <div className="max-w-md mx-auto px-4">
-        <h1 className="text-4xl font-bold mb-8 text-sunsetOrange">Request Information</h1>
+        <h1 className="text-4xl font-bold mb-8 text-sunsetOrange">Request Solar Estimate</h1>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
@@ -117,6 +119,15 @@ export default function InfoRequest() {
             </div>
             {errors.file && <p className="mt-2 text-sm text-red-600">{errors.file.message}</p>}
           </div>
+          <div>
+            <label htmlFor="message" className="block text-sm font-medium text-gray-700">Message (Optional)</label>
+            <textarea
+              {...register('message')}
+              id="message"
+              rows={4}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            ></textarea>
+          </div>
           <button
             type="submit"
             disabled={isSubmitting}
@@ -127,7 +138,7 @@ export default function InfoRequest() {
         </form>
         {submitStatus === 'success' && (
           <div className="mt-4 p-4 bg-green-100 text-green-700 rounded-md">
-            Your information has been successfully submitted. We'll be in touch soon!
+            Your information has been successfully submitted. We'll get back to you shortly with your solar estimate!
           </div>
         )}
         {submitStatus === 'error' && (
