@@ -14,7 +14,6 @@ export default function Layout({ children, title = 'Canyon State Solar & Roofing
         <title>{title}</title>
         <meta name="description" content={description} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Open+Sans&display=swap" rel="stylesheet" />
       </Head>
       <header className="bg-sunsetOrange text-white p-4 shadow-md">
         <nav className="container mx-auto flex flex-col md:flex-row justify-between items-center">

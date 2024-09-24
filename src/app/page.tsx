@@ -81,11 +81,11 @@ export default function Home() {
         <h2 className="text-4xl font-bold mb-10 text-sunsetOrange font-sans text-center">What Our Customers Say</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           <div className="bg-white p-8 rounded-lg shadow-lg italic">
-            <p className="mb-4">"Canyon State Solar & Roofing transformed our home. We're saving on energy bills and our roof looks amazing!"</p>
+            <p className="mb-4">&quot;Canyon State Solar &amp; Roofing transformed our home. We&apos;re saving on energy bills and our roof looks amazing!&quot;</p>
             <p className="font-bold">- Sarah J., Phoenix</p>
           </div>
           <div className="bg-white p-8 rounded-lg shadow-lg italic">
-            <p className="mb-4">"Professional, efficient, and friendly. They made going solar a breeze. Highly recommended!"</p>
+            <p className="mb-4">&quot;Professional, efficient, and friendly. They made going solar a breeze. Highly recommended!&quot;</p>
             <p className="font-bold">- Mike T., Scottsdale</p>
           </div>
         </div>
