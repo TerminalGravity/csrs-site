@@ -18,7 +18,10 @@ export async function POST(req: NextRequest) {
     const message = fields.message as string | undefined;
 
     if (!name || !email || !phone || !file) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Missing required fields' },
+        { status: 400 }
+      );
     }
 
     // Ensure the info_requests table exists
@@ -43,27 +46,36 @@ export async function POST(req: NextRequest) {
         phone: phone,
         customField: {
           message: message || '',
-          fileUrl: fileUrl
-        }
+          fileUrl: fileUrl,
+        },
       },
-      locationId: GOHIGHLEVEL_LOCATION_ID
+      locationId: GOHIGHLEVEL_LOCATION_ID,
     };
 
-    const goHighLevelResponse = await axios.post('https://rest.gohighlevel.com/v1/contacts/', goHighLevelData, {
-      headers: {
-        'Authorization': `Bearer ${GOHIGHLEVEL_API_KEY}`,
-        'Content-Type': 'application/json'
+    const goHighLevelResponse = await axios.post(
+      'https://rest.gohighlevel.com/v1/contacts/',
+      goHighLevelData,
+      {
+        headers: {
+          Authorization: `Bearer ${GOHIGHLEVEL_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
       }
-    });
+    );
 
     if (goHighLevelResponse.status !== 200) {
       throw new Error('Failed to send data to GoHighLevel');
     }
 
-    return NextResponse.json({ message: 'Information request submitted successfully' });
+    return NextResponse.json(
+      { message: 'Information request submitted successfully' }
+    );
   } catch (error) {
     console.error('Error:', error);
-    return NextResponse.json({ error: 'Failed to process your request' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Failed to process your request' },
+      { status: 500 }
+    );
   }
 }
 
