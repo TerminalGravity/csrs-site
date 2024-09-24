@@ -1,25 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sql } from '@vercel/postgres';
 import { createInfoRequestsTable } from '@/lib/db';
-import formidable from 'formidable';
 import axios from 'axios';
 
 const GOHIGHLEVEL_API_KEY = process.env.GOHIGHLEVEL_API_KEY;
 const GOHIGHLEVEL_LOCATION_ID = process.env.GOHIGHLEVEL_LOCATION_ID;
 
 export async function POST(req: NextRequest) {
-  const form = formidable({});
-
   try {
     const formData = await req.formData();
-    const fields = Object.fromEntries(formData);
+    const fields = Object.fromEntries(formData.entries());
     const file = formData.get('file') as File | null;
 
-    const name = fields.name?.[0];
-    const email = fields.email?.[0];
-    const phone = fields.phone?.[0];
-    const message = fields.message?.[0];
-    const file = files.file?.[0];
+    const name = fields.name as string;
+    const email = fields.email as string;
+    const phone = fields.phone as string;
+    const message = fields.message as string | undefined;
 
     if (!name || !email || !phone || !file) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
@@ -30,7 +26,7 @@ export async function POST(req: NextRequest) {
 
     // TODO: Implement file upload to a storage service (e.g., AWS S3)
     // For now, we'll just store the file name
-    const fileUrl = file.originalFilename || 'file';
+    const fileUrl = file.name || 'file';
 
     // Insert the info request into the database
     await sql`
