@@ -11,12 +11,9 @@ export async function POST(req: NextRequest) {
   const form = formidable({});
 
   try {
-    const [fields, files] = await new Promise<[formidable.Fields, formidable.Files]>((resolve, reject) => {
-      form.parse(req, (err, fields, files) => {
-        if (err) reject(err);
-        else resolve([fields, files]);
-      });
-    });
+    const formData = await req.formData();
+    const fields = Object.fromEntries(formData);
+    const file = formData.get('file') as File | null;
 
     const name = fields.name?.[0];
     const email = fields.email?.[0];
