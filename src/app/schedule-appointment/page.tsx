@@ -130,7 +130,7 @@ export default function ScheduleAppointment() {
         </form>
         {submitStatus === 'success' && (
           <div className="mt-4 p-4 bg-green-100 text-green-700 rounded-md">
-            Your roofing estimate appointment has been successfully scheduled. We'll confirm the details shortly!
+            Your roofing estimate appointment has been successfully scheduled. We&apos;ll confirm the details shortly!
           </div>
         )}
         {submitStatus === 'error' && (

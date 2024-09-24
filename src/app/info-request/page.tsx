@@ -138,7 +138,7 @@ export default function InfoRequest() {
         </form>
         {submitStatus === 'success' && (
           <div className="mt-4 p-4 bg-green-100 text-green-700 rounded-md">
-            Your information has been successfully submitted. We'll get back to you shortly with your solar estimate!
+            Your information has been successfully submitted. We&apos;ll get back to you shortly with your solar estimate!
           </div>
         )}
         {submitStatus === 'error' && (
