@@ -45,9 +45,9 @@ export default function ScheduleAppointment() {
 
   return (
     <Layout title="Schedule Appointment | Canyon State Solar & Roofing" description="Schedule an appointment for our roofing and solar services.">
-      <div className="max-w-md mx-auto">
-        <h1 className="text-3xl font-bold mb-6">Schedule an Appointment</h1>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <div className="max-w-md mx-auto px-4">
+        <h1 className="text-4xl font-bold mb-8 text-sunsetOrange">Schedule an Appointment</h1>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
             <input
